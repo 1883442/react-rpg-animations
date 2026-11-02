@@ -93,14 +93,33 @@ const FLIP: Keyframe[] = [
 // TODO: Écrire les keyframes comme demandé dans l'énoncé
 
 // TODO: FADE_IN : de transparent à visible
+const fade_in: Keyframe[] = [
+  { opacity: 1 }
+];
 
 // TODO: FADE_OUT : devient transparent
-
+ const fade_out: Keyframe[] = [
+      { opacity: 0 }
+     ];
 // TODO: PULSE : le slime grossit puis revient à sa taille normale (3 valeurs)
+const pulse: Keyframe[] = [
+  { transform : 'scale(1',offset: 0},
+  { transform : 'scale(4.5)',offset: 0.10},
+  { transform : 'scale(1)',offset: 1},
+];
 
 // TODO: ROTATE_CENTER : une rotation complète autour du centre
+const rotate_center: Keyframe[] = [
+  { transform : 'rotate(360deg)'}
+];
 
 // TODO: ROTATE_HOR : une rotation complète sur l'axe horizontal
+const rotate_hor: Keyframe[] = [
+  { transform : 'rotateX(360deg)'}
+];
+
+
+
 
 // FIN keyframes
 
@@ -108,11 +127,24 @@ export default function Home() {
   // détermine quels boutons sont affichés
   const [slimeIsPresent, setSlimeIsPresent] = useState(false);
 
+  const animer = async (elementId:string, keyframes: Keyframe[], durationMS:number) => {
+  const element = document.getElementById(elementId);
+
+  let animation = element?.animate(keyframes, { duration: durationMS });
+  await animation?.finished;
+};
+
   const spawn = () => {
     setSlimeIsPresent(true);
 
+   
+
+
     // TODO: spawn
     // On garde les valeurs finales (opacity: 1), sinon Slimey redevient invisible
+    const slimeyElem = document.getElementById("slimeyId");
+    slimeyElem?.animate(fade_in, {duration: 1000, easing: 'ease-in',fill:'forwards'});
+    // await animationShow?.finish;
     
   };
 
@@ -121,17 +153,27 @@ export default function Home() {
 
     // TODO: death
     // Les deux animations jouent en même temps (pas de await entre les deux)
+    const slimeyElem = document.getElementById("slimeyId");
+    slimeyElem?.animate(fade_out, {duration: 1000, easing: 'ease-in',fill:'forwards'});
     
   };
 
   const attack = async () => {
+
+    
     // TODO: attack
     // await : on attend la fin de l'élan avant de jouer l'attaque
-    
+    const slimeyElem = document.getElementById("slimeyId");
+    let jelloAnnim = slimeyElem?.animate(JELLO, {duration: 3000});
+    await animer('slimeyId', JELLO, 1000);
+    await animer('slimeyId', pulse, 1000);
   };
 
   const bounceShakeFlip = async () => {
     // TODO: bounceShakeFlip
+    const slimeyElem = document.getElementById("slimeyId");
+    let animation = slimeyElem?.animate(rotate_center, {duration: 5000, easing: 'ease-in'});
+    await animation?.finish;
     
   };
 
@@ -139,13 +181,21 @@ export default function Home() {
     // TODO: infiniteTripleSpin
     // Boucle infinie : 2 rotations au centre, puis 1 rotation horizontale
     // On n'utilisera pas l'option de boucler l'animation, car on veut 2 rotations au centre puis 1 rotation horizontale, et non pas 3 rotations au centre
-    
+    const slimeyElem = document.getElementById("slimeyId");
+    for(let i = 0; i < 2; i++) {
+      // let centerRot = slimeyElem?.animate(rotate_center,{duration: 3000});
+      // await centerRot?.finish;
+       await animer('slimeyId',rotate_center,3000);
+    }
+       await animer('slimeyId',rotate_hor,1000);
+
     // TODO: Optionnel: Un petit défi, vous pourriez faire une seule animation qui combine les 3 rotations et utilisé l'option de boucle
   };
 
   const infiniteTripleSpinBonus = async () => {
     // TODO: infiniteTripleSpinBonus
     // TODO: Optionnel: Un petit défi, vous pourriez faire une seule animation qui combine les 3 rotations et utilisé l'option de boucle
+    
   };
 
   // -------------------------------------------------------------------------
